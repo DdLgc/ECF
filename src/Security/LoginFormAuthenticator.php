@@ -2,11 +2,16 @@
 
 namespace App\Security;
 
+use App\Controller\SecurityController;
 use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -52,24 +57,26 @@ class LoginFormAuthenticator extends AbstractAuthenticator
      */
     public function authenticate(Request $request )// UserPasswordEncoderInterface $encoder   CODE
     {
-        $user = $this->userRepository->findOneBy([
-            'email'=>$request->request->get('email')]);
-    
-            
-        // dd($user);
-        if (!$user) {
-            throw new CustomUserMessageAuthenticationException('Invalid credentials');
+        $api_token = $request->request->get('csrf_token');
+        if ($api_token === null){
+            throw new CustomUserMessageAuthenticationException("no access");
         }
+
+       $email = $request->request->get("email");
+    return new Passport(
+             new UserBadge($email),
+             new PasswordCredentials($request->request->get('password')), [
+                 new CsrfTokenBadge ('login_form', $request->request->get('csrf_token'))
+             ]
+         );
+        //    print_r($user->getId());
+        //// dd($user);
+        //if (!$user) {
+        //    throw new CustomUserMessageAuthenticationException('Invalid credentials');
+        //
+        //}
         // if ($encoder)
         // print_r($request->request->get('email'));  CODE MIS EN COMMENTAIRE APRES LE COURS
-
-
-        // // return new Passport(
-        //     $user,
-        //     new PasswordCredentials($request->request->get('password')), [
-        //         new CsrfTokenBadge ('login_form', $request->request->get('csrf_token'))
-        //     ]
-        // );
     }
     /**
      * Create an authenticated token for the given user.
@@ -100,10 +107,11 @@ class LoginFormAuthenticator extends AbstractAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $this->addFlash (
-            'error',
-            'Logged fail !!'// $this->addFlash() is equivalent to $request->getSession()->getFlashBag()->add()
-        );
-        return new RedirectResponse($this->urlGenerator->generate('app_login'));
+        return new Response("Loggin failed",400);
+        //$this->return(
+           // 'error'
+            //'Logged fail !!'// $this->addFlash() is equivalent to $request->getSession()->getFlashBag()->add()
+        //);
+        //return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }
 }

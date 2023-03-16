@@ -4,13 +4,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Validator\Constraints\Unique;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 
-class User implements UserInterface
+class User implements UserInterface , PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -25,10 +26,10 @@ class User implements UserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
-    
-    public function getuseridentifier()
-    {
 
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
     }
     public function getId(): ?int
     {
@@ -72,6 +73,14 @@ class User implements UserInterface
     }
 
     /**
+     * @return string|null
+     */
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    /**
      * Returns the password used to authenticate the user.
      *
      * This should be the hashed password. On authentication, a plain-text
@@ -81,10 +90,7 @@ class User implements UserInterface
      *
      * @return string|null
      */
-    public function getPassword()
-    {
-        // return $this->password;
-    }
+
 
     /**
      * @see userInterface
