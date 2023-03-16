@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Titre de la page</title>
+  <style>
+    /* styles pour les différentes tailles d'écran */
+    @media (max-width: 767px) {
+      /* styles pour les écrans de taille inférieure à 768px (mobile) */
+      /* affichage en colonne pour le corps de la page */
+      .photos-container {
+        display: flex;
+        flex-direction: column;
+      }
+      /* affichage des boutons en mode hamburger */
+      .nav-links {
+        display: none;
+      }
+      .nav-links.show {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    @media (min-width: 768px) and (max-width: 991px) {
+      /* styles pour les écrans de taille entre 768px et 991px (tablette) */
+      /* affichage en colonne pour le corps de la page */
+      .photos-container {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    @media (min-width: 992px) {
+      /* styles pour les écrans de taille supérieure à 992px (ordinateur) */
+      /* affichage en ligne pour le corps de la page */
+      .photos-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">
+        <!-- votre logo ici -->
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Bouton 1</a></li>
+        <li><a href="#">Bouton 2</a></li>
+        <li><a href="#">Bouton 3</a></li>
+      </ul>
+      <div
