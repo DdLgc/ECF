@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            {% block title %}Panel d'administration du {{ project.name }}{% endblock %}
+        </title>
+    </head>
+    <body>
+        <header>
+            <div>
+                <button action="">
+                    ajouter
+                </button>
+            </div>
+        </header>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        raison sociale
+                    </th>
+                    <th>
+                        email
+                    </th>
+                    <th>
+                        numero de téléphone
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in admins %}
+                <tr>
+                    <td>
+                        {{ item.name }}
+                    </td>
+                    <td>
+                        {{ item.email }}
+                    </td>
+                    <td>
+                        {{ item.telephone }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
