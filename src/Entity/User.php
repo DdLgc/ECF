@@ -27,6 +27,34 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
+    #[ORM\Column(length: 255),unique(true)]
+    private ?string $telephone = null;
+
+    #[ORM\Column(),unique(true)]
+    private ?bool $is_admin = false;
+
+    public function __construct()
+    {
+        $this->is_admin = false ;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    /**
+     * @param string|null $telephone
+     */
+    public function setTelephone(?string $telephone): void
+    {
+        $this->telephone = $telephone;
+    }
+
+
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
@@ -69,7 +97,10 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
 
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        //if ($roles != null && count($roles) == 0){
+        //    $roles[] = 'ROLE_USER';
+        //}
+        return $this->is_admin? ["ROLE_ADMIN"]:["ROLE_USER"];
     }
 
     /**
@@ -111,10 +142,25 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
 
     }
 
-
     public function getUsername()
     {
         return $this->email;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsAdmin(): ?bool
+    {
+        return $this->is_admin;
+    }
+
+    /**
+     * @param bool|null $isAdmin
+     */
+    public function setIsAdmin(?bool $isAdmin): void
+    {
+        $this->is_admin = $isAdmin;
     }
 }
 

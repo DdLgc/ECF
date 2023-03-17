@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            {% block title %}Panel d'administration du {{ project.name }}{% endblock %}
+        </title>
+    </head>
+    <body>
+        <header>
+            <div>
+                <form action="{{ path('app_admin_add') }}" novalidate method="POST">
+                    <input type="submit" value="Ajouter">
+                </form>
+            </div>
+        </header>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        raison sociale
+                    </th>
+                    <th>
+                        email
+                    </th>
+                    <th>
+                        numero de téléphone
+                    </th>
+                    <th>
+                        action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in admins %}
+                <tr>
+                    <td>
+                        {{ item.name }}
+                    </td>
+                    <td>
+                        {{ item.email }}
+                    </td>
+                    <td>
+                        {{ item.telephone }}
+                    </td>
+                    <td>
+                        <form>
+                            <a href="{{ path("app_form_edit", {'id':item.id}) }}">Modifier</a>
+                            <a href="{{ path("app_admin_delete", {'id':item.id})}}">Supprimer</a>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
