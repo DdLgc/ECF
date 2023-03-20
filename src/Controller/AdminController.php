@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Gallerie;
+use App\Entity\Horaire;
 use App\Entity\User;
 use Doctrine\ORM\Mapping\Id;
 use Symfony\Component\Form\AbstractType;
@@ -84,5 +86,132 @@ class AdminController extends AbstractController
             'controller_name' => 'AdminController',
             'user'=> $user
         ]);
+    }#[Route('/admin/horaire', name: 'app_horaire')]
+    public function horaire(): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $horaires = $entityManager->getRepository(Horaire::class)->findAll();
+        return $this->render('admin/Horaire/horaire.html.twig', [
+            'controller_name' => 'AdminController',
+            'horaires'=>$horaires
+        ]);
     }
+    #[Route('/admin/horaire/add', name: 'app_horaire_add')]
+    public function horaireAdd(): Response
+{
+    return $this->render('admin/Horaire/horaireForm.html.twig', [
+        'controller_name' => 'AdminController',
+        'horaire' => new Horaire(),
+    ]);
+}
+#[Route('/admin/horaire/form/edit/{id}', name: 'app_horaire_form_edit')]
+    public function horaireFormEdit($id): Response
+{
+    $entityManager = $this->getDoctrine()->getManager();
+    $horaire = $entityManager->getRepository(Horaire::class)->find($id);
+    return $this->render('admin/Horaire/horaireForm.html.twig', [
+        'controller_name' => 'AdminController',
+        'horaire' => $horaire,
+    ]);
+}
+
+     #[Route('/admin/horaire/post/{id}', name: 'app_horaire_post')]
+
+    public function horairePost(Request $request, $id): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        if (isset($id) && $id != 0){
+            $horaire =  $entityManager->getRepository(Horaire::class)->find($id);
+        }
+        else {
+            $horaire = new Horaire();
+        }
+        $horaire->setHeureDebut($request->request->get("heureDebut"));
+        $entityManager->persist($horaire);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_horaire');
+    }#[Route('/admin/horaire/edit/{id}', name: 'app_horaire_edit')]
+    public function horaireEdit($id, Request $request): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $horaire = $entityManager->getRepository(Horaire::class)->find($id);
+
+        $horaire->setHeureDebut($request->request->get("heureDebut"));
+        $entityManager->persist($horaire);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_horaire');
+    }#[Route('/admin/horaire/delete/{id}', name: 'app_horaire_delete')]
+    public function horaireDelete($id): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $horaire = $entityManager->getRepository(Horaire::class)->find($id);
+        $entityManager->remove($horaire);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_horaire');
+    }
+#[Route('/admin/gallerie', name: 'app_gallerie')]
+    public function gallerie(): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $galleries = $entityManager->getRepository(gallerie::class)->findAll();
+        return $this->render('admin/gallerie/gallerie.html.twig', [
+            'controller_name' => 'AdminController',
+            'galleries'=>$galleries
+        ]);
+    }
+    #[Route('/admin/gallerie/add', name: 'app_gallerie_add')]
+    public function gallerieAdd(): Response
+{
+    return $this->render('admin/gallerie/gallerieForm.html.twig', [
+        'controller_name' => 'AdminController',
+        'gallerie' => new gallerie(),
+    ]);
+}
+#[Route('/admin/gallerie/form/edit/{id}', name: 'app_gallerie_form_edit')]
+    public function gallerieFormEdit($id): Response
+{
+    $entityManager = $this->getDoctrine()->getManager();
+    $gallerie = $entityManager->getRepository(Gallerie::class)->find($id);
+    return $this->render('admin/gallerie/gallerieForm.html.twig', [
+        'controller_name' => 'AdminController',
+        'gallerie' => $gallerie,
+    ]);
+}
+
+#[Route('/admin/gallerie/post/{id}', name: 'app_gallerie_post')]
+public function galleriePost(Request $request, $id): Response
+{
+   $entityManager = $this->getDoctrine()->getManager();
+   if (isset($id) && $id != 0){
+       $gallerie =  $entityManager->getRepository(Gallerie::class)->find($id);
+   }
+   else {
+       $gallerie = new Gallerie();
+   }
+   $gallerie->setTitre($request->request->get("titre"));
+   $gallerie->setDescription($request->request->get("description"));
+   $gallerie->setPrix($request->request->get("prix"));
+   $gallerie->setImage($request->request->get("image"));
+   $entityManager->persist($gallerie);
+   $entityManager->flush();
+   return $this->redirectToRoute('app_gallerie');
+}#[Route('/admin/gallerie/edit/{id}', name: 'app_gallerie_edit')]
+public function gallerieEdit($id, Request $request): Response
+{
+   $entityManager = $this->getDoctrine()->getManager();
+   $gallerie = $entityManager->getRepository(Gallerie::class)->find($id);
+
+   $gallerie->setHeureDebut($request->request->get("heureDebut"));
+   $entityManager->persist($gallerie);
+   $entityManager->flush();
+   return $this->redirectToRoute('app_gallerie');
+}#[Route('/admin/gallerie/delete/{id}', name:'app_gallerie_delete')]
+public function gallerieDelete($id): Response
+{
+   $entityManager = $this->getDoctrine()->getManager();
+   $gallerie = $entityManager->getRepository(Gallerie::class)->find($id);
+   $entityManager->remove($gallerie);
+   $entityManager->flush();
+   return $this->redirectToRoute('app_gallerie');
+}
 }
