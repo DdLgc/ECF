@@ -1,0 +1,24 @@
+{% block title %}Ajouter une gallerie dans {{ project.name }} {% endblock %}
+
+{% block body %}
+    <form action="{{ path("app_gallerie_post",{'id':gallerie.id?gallerie.id:0}) }}" method="POST">
+        <div>
+            <label for="titre">titre</label><br/>
+            <input type="text" name="titre" id="titre" value="{{ gallerie.titre }}" required autodfocus>
+        </div>
+        <div>
+            <label for="description">description</label><br/>
+            <input type="text" name="description" id="description" value="{{ gallerie.description }}" required
+                   autodfocus>
+        </div>
+        <div>
+            <label for="prix">prix</label><br/>
+            <input type="number" step="any" name="prix" id="prix" value="{{ gallerie.prix }}" required autodfocus>
+        </div>
+        <div>
+            <label for="image">image</label><br/>
+            <input type="file" name="image" id="image" value="{{ gallerie.image }}" required autodfocus>
+        </div>
+        <input type="submit" value="Enregistrer">
+    </form>
+{% endblock %}
