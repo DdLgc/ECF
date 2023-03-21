@@ -6,12 +6,16 @@ use App\Entity\Gallerie;
 use App\Entity\Horaire;
 use App\Entity\User;
 use Doctrine\ORM\Mapping\Id;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use function Symfony\Component\String\u;
 
 class AdminController extends AbstractController
 {
@@ -179,7 +183,7 @@ class AdminController extends AbstractController
 }
 
 #[Route('/admin/gallerie/post/{id}', name: 'app_gallerie_post')]
-public function galleriePost(Request $request, $id): Response
+public function galleriePost(Request $request, $id,UploadedFile $file,SluggerInterface $slugger,ParameterBagInterface $params): Response
 {
    $entityManager = $this->getDoctrine()->getManager();
    if (isset($id) && $id != 0){
@@ -194,8 +198,22 @@ public function galleriePost(Request $request, $id): Response
    $gallerie->setImage($request->request->get("image"));
    $entityManager->persist($gallerie);
    $entityManager->flush();
+   $file = $request->files->get('image');
+   if ($file instanceof UploadedFile){
+    $this->uploadImage($file,$slugger,$params);//arret ici
+   }
    return $this->redirectToRoute('app_gallerie');
-}#[Route('/admin/gallerie/edit/{id}', name: 'app_gallerie_edit')]
+}
+public function uploadImage(UploadedFile $file,SluggerInterface $slugger,ParameterBagInterface $params)
+{
+    $publicDir = $params->get('kernel.project_dir') .'/public';
+    $imageDir = $publicDir .'/assets/img';
+    $originalFileName = pathinfo($file->getClientOriginalName(),PATHINFO_FILENAME);
+    $safeFileName = $slugger->slug($originalFileName);
+    $newFileName = $safeFileName.'-'.uniqid().'.'.$file->guessExtension();
+    $file->move($imageDir,$newFileName);
+}
+#[Route('/admin/gallerie/edit/{id}', name: 'app_gallerie_edit')]
 public function gallerieEdit($id, Request $request): Response
 {
    $entityManager = $this->getDoctrine()->getManager();

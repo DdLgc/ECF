@@ -1,6 +1,30 @@
-{% extends 'layouts/base.html.twig' %}  
+{% extends 'layouts/base.html.twig' %}
 
 {% block title %}Bienvenue Au {{ project.name }}{% endblock %}
 {% block body %}
-    <p>home html twig</p>
+    <body>
+    <div class="container">
+        <div class="row">
+            <div class="col-5 d-flex justify-content-center m-4">
+                <img src="{{ asset('assets/img/entrée1.jpg') }}" alt="Photo 1"/>
+                <div class="text">Description de la photo 1</div>
+            </div>
+            <div class="col-5 d-flex justify-content-center m-4">
+                <img src="{{ asset('assets/img/plat.jpg') }}" alt="Photo 2"/>
+                <div class="text">Description de la photo 2</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5 d-flex justify-content-center m-4">
+                <img src="{{ asset('assets/img/dessert1.jpg') }}" alt="Photo 3"/>
+                <div class="text">Description de la photo 3</div>
+            </div>
+            <div class="col-5 d-flex justify-content-center m-4">
+                <img src="{{ asset('assets/img/dessert.jpg') }}" alt="Photo 4"/>
+                <div class="text">Description de la photo 4</div>
+            </div>
+        </div>
+    </div>
+    </body>
+
 {% endblock %} 
