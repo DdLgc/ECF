@@ -35,11 +35,13 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         $this->urlGenerator = $urlGenerator;
         // dd($userRepository);
     }
+
     public function supports(Request $request): ?bool
     {
         return $request->attributes->get('_route') === 'app_login'
-        && $request->isMethod('POST');
+            && $request->isMethod('POST');
     }
+
     /**
      * Create a passport for the current request.
      *
@@ -55,20 +57,20 @@ class LoginFormAuthenticator extends AbstractAuthenticator
      *
      * @throws AuthenticationException
      */
-    public function authenticate(Request $request )// UserPasswordEncoderInterface $encoder   CODE
+    public function authenticate(Request $request)// UserPasswordEncoderInterface $encoder   CODE
     {
         $api_token = $request->request->get('csrf_token');
-        if ($api_token === null){
+        if ($api_token === null) {
             throw new CustomUserMessageAuthenticationException("no access");
         }
 
-       $email = $request->request->get("email");
-    return new Passport(
-             new UserBadge($email),
-             new PasswordCredentials($request->request->get('password')), [
-                 new CsrfTokenBadge ('login_form', $request->request->get('csrf_token'))
-             ]
-         );
+        $email = $request->request->get("email");
+        return new Passport(
+            new UserBadge($email),
+            new PasswordCredentials($request->request->get('password')), [
+                new CsrfTokenBadge ('login_form', $request->request->get('csrf_token'))
+            ]
+        );
         //    print_r($user->getId());
         //// dd($user);
         //if (!$user) {
@@ -78,6 +80,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         // if ($encoder)
         // print_r($request->request->get('email'));  CODE MIS EN COMMENTAIRE APRES LE COURS
     }
+
     /**
      * Create an authenticated token for the given user.
      *
@@ -85,9 +88,9 @@ class LoginFormAuthenticator extends AbstractAuthenticator
      * understand what a "token" is, you can skip this method by extending
      * the AbstractAuthenticator class from your authenticator.
      *
-     * @see AbstractAuthenticator
-     *
      * @param PassportInterface $passport The passport returned from authenticate()
+     *
+     * @see AbstractAuthenticator
      *
      * @deprecated since Symfony 5.4, use {@link createToken()} instead
      */
@@ -107,10 +110,10 @@ class LoginFormAuthenticator extends AbstractAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        return new Response("Loggin failed",400);
+        return new Response("Loggin failed", 400);
         //$this->return(
-           // 'error'
-            //'Logged fail !!'// $this->addFlash() is equivalent to $request->getSession()->getFlashBag()->add()
+        // 'error'
+        //'Logged fail !!'// $this->addFlash() is equivalent to $request->getSession()->getFlashBag()->add()
         //);
         //return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }

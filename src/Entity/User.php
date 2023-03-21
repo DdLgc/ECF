@@ -54,7 +54,6 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         $this->telephone = $telephone;
     }
 
-
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
