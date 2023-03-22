@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Gallerie;
 use App\Entity\Horaire;
 use App\Entity\User;
+use App\Form\ImageType;
 use Doctrine\ORM\Mapping\Id;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\AbstractType;
@@ -177,11 +178,42 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/gallerie/add', name: 'app_gallerie_add')]
-    public function gallerieAdd(): Response
+    public function gallerieAdd( Request $request): Response
     {
+        $gallerie = new Gallerie();
+        $form = $this->createForm(ImageType::class);
+        $form->handleRequest($request);
+        $publicDir = '../uploads';
+        if (!is_dir($publicDir)) {
+            mkdir($publicDir, 0777, true);
+        }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $gallerie->setTitre($request->request->get("titre"));
+            $gallerie->setDescription($request->request->get("description"));
+            $gallerie->setPrix($request->request->get("prix"));
+            $imageFile = $form->get('imageFile')->getData();
+
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $originalFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                // Move the file to the public directory
+                $imageFile->move(
+                    $publicDir,
+                    $newFilename
+                );
+
+                $gallerie->setImage($newFilename);
+            }
+            $entityManager->persist($gallerie);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_gallerie');
+        }
         return $this->render('admin/gallerie/gallerieForm.html.twig', [
             'controller_name' => 'AdminController',
-            'gallerie' => new gallerie(),
+            'gallerie' => $gallerie,
+            'form' => $form->createView(),
         ]);
     }
 
