@@ -16,18 +16,39 @@ class LoginController extends AbstractController
     {
         return $this->render('login/index.html.twig', [
             'controller_name' => 'LoginController',
+            'isAdmin'=> false,
         ]);
-    }#[Route('/login/register', name: 'app_login_register')]
+    }
+    #[Route('/login/register', name: 'app_login_register')]
     public function register(): Response
     {
         return $this->render('layouts/register/index.html.twig', [
             'controller_name' => 'LoginController',
-            'user'=> new User()
+            'user'=> new User(),
+            'isAdmin'=> false,
         ]);
-    }#[Route('/login/register/post', name: 'app_login_register_post')]
-public function post(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    }
+    #[Route('/login/edit/{id}', name: 'app_login_edit')]
+    public function edit($id): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $user = $entityManager->getRepository(User::class)->find($id);
+        return $this->render('layouts/register/index.html.twig', [
+            'controller_name' => 'LoginController',
+            'user' => $user,
+            'isAdmin'=> false,
+        ]);
+    }
+    #[Route('/login/register/post/{id}', name: 'app_login_register_post')]
+public function post(Request $request, UserPasswordHasherInterface $passwordHasher, $id): Response
 {
-    $user = new User();
+    $entityManager = $this->getDoctrine()->getManager();
+    if (isset($id) && $id!=0){
+        $user = $entityManager->getRepository(User::class)->find($id);
+    }
+    else {
+        $user = new User();
+    }
     $user->setPassword(
         $passwordHasher->hashPassword(  $user,
             $request->request->get("password"))
@@ -35,9 +56,11 @@ public function post(Request $request, UserPasswordHasherInterface $passwordHash
     $user->setEmail($request->request->get("email"));
     $user->setTelephone($request->request->get("telephone"));
     $user->setName($request->request->get("name"));
-    $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($user);
     $entityManager->flush();
-    return $this->redirectToRoute('app_login');
+    return $this->render('login/index.html.twig', [
+        'controller_name' => 'LoginController',
+        'isAdmin'=> false,
+    ]);
 }
 }

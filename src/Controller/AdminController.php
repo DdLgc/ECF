@@ -177,15 +177,24 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/gallerie/add', name: 'app_gallerie_add')]
-    public function gallerieAdd( Request $request): Response
+    #[Route('/admin/gallerie/add/{id}', name: 'app_gallerie_add')]
+    public function gallerieAdd(Request $request, ParameterBagInterface $params, $id): Response
     {
-        $gallerie = new Gallerie();
+        $entityManager = $this->getDoctrine()->getManager();
+        if (isset($id) && $id != 0) {
+            $gallerie = $entityManager->getRepository(Gallerie::class)->find($id);
+        } else {
+            $gallerie = new Gallerie();
+        }
+
         $form = $this->createForm(ImageType::class);
         $form->handleRequest($request);
-        $publicDir = '../uploads';
-        if (!is_dir($publicDir)) {
-            mkdir($publicDir, 0777, true);
+        $publicDir = $params->get('kernel.project_dir') . '/public';
+        chmod($publicDir, 0755);//Donne la permission au dossier
+        $imageDir = $publicDir . '/assets/';
+        chmod($imageDir, 0755);
+        if (!is_dir($imageDir)) {
+            mkdir($imageDir, 0755, true);
         }
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -203,7 +212,6 @@ class AdminController extends AbstractController
                     $publicDir,
                     $newFilename
                 );
-
                 $gallerie->setImage($newFilename);
             }
             $entityManager->persist($gallerie);
@@ -215,61 +223,6 @@ class AdminController extends AbstractController
             'gallerie' => $gallerie,
             'form' => $form->createView(),
         ]);
-    }
-
-    #[Route('/admin/gallerie/form/edit/{id}', name: 'app_gallerie_form_edit')]
-    public function gallerieFormEdit($id): Response
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $gallerie = $entityManager->getRepository(Gallerie::class)->find($id);
-        return $this->render('admin/gallerie/gallerieForm.html.twig', [
-            'controller_name' => 'AdminController',
-            'gallerie' => $gallerie,
-        ]);
-    }
-
-    #[Route('/admin/gallerie/post/{id}', name: 'app_gallerie_post')]
-    public function galleriePost(Request $request, $id, UploadedFile $file, SluggerInterface $slugger, ParameterBagInterface $params): Response
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        if (isset($id) && $id != 0) {
-            $gallerie = $entityManager->getRepository(Gallerie::class)->find($id);
-        } else {
-            $gallerie = new Gallerie();
-        }
-        $gallerie->setTitre($request->request->get("titre"));
-        $gallerie->setDescription($request->request->get("description"));
-        $gallerie->setPrix($request->request->get("prix"));
-        $gallerie->setImage($request->request->get("image"));
-        $entityManager->persist($gallerie);
-        $entityManager->flush();
-        $file = $request->files->get('image');
-        if ($file instanceof UploadedFile) {
-            $this->uploadImage($file, $slugger, $params);//arret ici
-        }
-        return $this->redirectToRoute('app_gallerie');
-    }
-
-    public function uploadImage(UploadedFile $file, SluggerInterface $slugger, ParameterBagInterface $params)
-    {
-        $publicDir = $params->get('kernel.project_dir') . '/public';
-        $imageDir = $publicDir . '/assets/img';
-        $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFileName = $slugger->slug($originalFileName);
-        $newFileName = $safeFileName . '-' . uniqid() . '.' . $file->guessExtension();
-        $file->move($imageDir, $newFileName);
-    }
-
-    #[Route('/admin/gallerie/edit/{id}', name: 'app_gallerie_edit')]
-    public function gallerieEdit($id, Request $request): Response
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $gallerie = $entityManager->getRepository(Gallerie::class)->find($id);
-
-        $gallerie->setHeureDebut($request->request->get("heureDebut"));
-        $entityManager->persist($gallerie);
-        $entityManager->flush();
-        return $this->redirectToRoute('app_gallerie');
     }
 
     #[Route('/admin/gallerie/delete/{id}', name: 'app_gallerie_delete')]

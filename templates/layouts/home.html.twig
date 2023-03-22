@@ -5,24 +5,14 @@
     <body>
     <div class="container">
         <div class="row">
-            <div class="col-5 d-flex justify-content-center m-4">
-                <img src="{{ asset('uploads') }}" alt="Photo 1"/>
-                <div class="text">Description de la photo 1</div>
-            </div>
-            <div class="col-5 d-flex justify-content-center m-4">
-                <img src="{{ asset('uploads') }}" alt="Photo 2"/>
-                <div class="text">Description de la photo 2</div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-5 d-flex justify-content-center m-4">
-                <img src="{{ asset('uploads') }}" alt="Photo 3"/>
-                <div class="text">Description de la photo 3</div>
-            </div>
-            <div class="col-5 d-flex justify-content-center m-4">
-                <img src="{{ asset('uploads') }}" alt="Photo 4"/> //Peut etre sans S upload
-                <div class="text">Description de la photo 4</div>
-            </div>
+            {% for item in gallerie %}
+                <div class="col-5 d-flex justify-content-center m-4">
+                    <img src="{{ asset(item.image) }}" alt="Photo 1"/>
+                    <div class="text">{{ item.titre }}</div>
+                    <div class="text">{{ item.prix }}</div>
+                    <div class="text">{{ item.description }}</div>
+                </div>
+            {% endfor %}
         </div>
     </div>
     </body>

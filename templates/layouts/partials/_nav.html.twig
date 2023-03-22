@@ -26,9 +26,10 @@
                         {% else %}
                             <li><a class="dropdown-item" href={{ path('app_login') }}>Se connecter</a></li>
                         {% endif %}
-                        <li><a class="dropdown-item" href="#">Modifier mon compte</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_login_edit',{id:user?user.id:0}) }}">Modifier mon compte</a></li>
                     </ul>
                 </div>
+                {% if isAdmin %}
                 <div class="btn-group" role="group">
                     <button type="button" class="btnAcc p-2 m-3 dropdown-toggle" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -39,6 +40,7 @@
                         <li><a class="dropdown-item" href="{{ path('app_horaire') }}">Horaire</a></li>
                     </ul>
                 </div>
+                {% endif %}
                 </li>
             </ul>
         </div>

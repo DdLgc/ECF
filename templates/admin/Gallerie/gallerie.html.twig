@@ -10,7 +10,7 @@
 {% include 'layouts/partials/_nav.html.twig' %}
 <header>
     <div>
-        <form action="{{ path('app_gallerie_add') }}" novalidate method="POST">
+        <form action="{{ path('app_gallerie_add',{'id':0}) }}" novalidate method="POST">
             <input type="submit" value="Ajouter">
         </form>
     </div>
@@ -45,11 +45,11 @@
                 {{ item.prix }}
             </td>
             <td>
-                {{ item.image }}
+                <img src="{{ asset(item.image) }}" alt="image" width="80">
             </td>
             <td>
                 <form>
-                    <a href="{{ path("app_gallerie_form_edit", {'id':item.id}) }}">Modifier</a>
+                    <a href="{{ path('app_gallerie_add', {'id':item.id?item.id:0}) }}">Modifier</a>
                     <a href="{{ path("app_gallerie_delete", {'id':item.id}) }}">Supprimer</a>
                 </form>
             </td>

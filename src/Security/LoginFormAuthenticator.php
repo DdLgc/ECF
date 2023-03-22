@@ -57,7 +57,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
      *
      * @throws AuthenticationException
      */
-    public function authenticate(Request $request)// UserPasswordEncoderInterface $encoder   CODE
+    public function authenticate(Request $request)
     {
         $api_token = $request->request->get('csrf_token');
         if ($api_token === null) {
@@ -71,14 +71,6 @@ class LoginFormAuthenticator extends AbstractAuthenticator
                 new CsrfTokenBadge ('login_form', $request->request->get('csrf_token'))
             ]
         );
-        //    print_r($user->getId());
-        //// dd($user);
-        //if (!$user) {
-        //    throw new CustomUserMessageAuthenticationException('Invalid credentials');
-        //
-        //}
-        // if ($encoder)
-        // print_r($request->request->get('email'));  CODE MIS EN COMMENTAIRE APRES LE COURS
     }
 
     /**
