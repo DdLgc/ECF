@@ -1,0 +1,41 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}Panel d'administration du {{ project.name }}{% endblock %}
+    </title>
+</head>
+<body>
+<header>
+    <div>
+        <form action="{{ path('app_horaire_add') }}" novalidate method="POST">
+            <input type="submit" value="Ajouter">
+        </form>
+    </div>
+</header>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>
+            heure d'ouverture
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in horaires %}
+        <tr>
+            <td>
+                {{ item.getHeureDebut() }}
+            </td>
+            <td>
+                <form>
+                    <a href="{{ path("app_horaire_form_edit", {'id':item.id}) }}">Modifier</a>
+                    <a href="{{ path("app_horaire_delete", {'id':item.id}) }}">Supprimer</a>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

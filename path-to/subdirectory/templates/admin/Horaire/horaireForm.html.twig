@@ -1,0 +1,12 @@
+{% block title %}Ajouter une horaire d'ouverture dans {{ project.name }} {% endblock %}
+
+{% block body %}
+    <form action="{{ path("app_horaire_post",{'id':horaire.id?horaire.id:0}) }}" method="POST">
+        <div>
+            <label for="heureDebut">heure d'ouverture</label><br/>
+            <input type="heureDebut" name="heureDebut" id="heureDebut" value="{{ horaire.getHeureDebut() }}" required
+                   autodfocus>
+        </div>
+        <input type="submit" value="Enregistrer">
+    </form>
+{% endblock %}

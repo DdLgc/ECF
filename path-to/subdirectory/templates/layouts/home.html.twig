@@ -1,0 +1,20 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}Bienvenue Au {{ project.name }}{% endblock %}
+{% block body %}
+    <body>
+    <div class="container">
+        <div class="row">
+            {% for item in gallerie %}
+                <div class="col-5 d-flex justify-content-center m-4">
+                    <img src="{{ asset(item.image) }}" alt="Photo 1"/>
+                    <div class="text">{{ item.titre }}</div>
+                    <div class="text">{{ item.prix }}</div>
+                    <div class="text">{{ item.description }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    </body>
+
+{% endblock %} 

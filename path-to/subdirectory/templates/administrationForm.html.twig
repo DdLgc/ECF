@@ -1,0 +1,24 @@
+{% block title %}Ajouter un admin dans {{ project.name }} {% endblock %}
+
+{% block body %}
+
+    <form action="{{ path("app_admin_post") }}" method="POST">
+        <div>
+            <label for="email">Email</label><br/>
+            <input type="email" name="email" id="email" value="{{ user.email }}" required autodfocus>
+        </div>
+        <div>
+            <label for="name">Raison sociale</label><br/>
+            <input type="text" name="name" id="name" value="{{ user.name }}" required autodfocus>
+        </div>
+        <div>
+            <label for="telephone">Telephone</label><br/>
+            <input type="phone" name="telephone" id="telephone" value="{{ user.telephone }}" required autodfocus>
+        </div>
+        <div>
+            <label for="password">Password</label><br/>
+            <input type="password" name="password" id="password" required autodfocus>
+        </div>
+        <input type="submit" value="Enregistrer">
+    </form>
+{% endblock %}

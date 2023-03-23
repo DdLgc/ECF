@@ -1,0 +1,61 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}Panel d'administration du {{ project.name }}{% endblock %}
+    </title>
+</head>
+<body>
+
+{% include 'layouts/partials/_nav.html.twig' %}
+<header>
+    <div>
+        <form action="{{ path('app_gallerie_add',{'id':0}) }}" novalidate method="POST">
+            <input type="submit" value="Ajouter">
+        </form>
+    </div>
+</header>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>
+            titre
+        </th>
+        <th>
+            description
+        </th>
+        <th>
+            prix
+        </th>
+        <th>
+            image
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in galleries %}
+        <tr>
+            <td>
+                {{ item.titre }}
+            </td>
+            <td>
+                {{ item.description }}
+            </td>
+            <td>
+                {{ item.prix }}
+            </td>
+            <td>
+                <img src="{{ asset(item.image) }}" alt="image" width="80">
+            </td>
+            <td>
+                <form>
+                    <a href="{{ path('app_gallerie_add', {'id':item.id?item.id:0}) }}">Modifier</a>
+                    <a href="{{ path("app_gallerie_delete", {'id':item.id}) }}">Supprimer</a>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
