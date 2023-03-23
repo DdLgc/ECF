@@ -45,6 +45,8 @@
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
     },
+
+
     "config": {
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
@@ -95,6 +97,7 @@
         }
     },
     "require-dev": {
+        "heroku/heroku-buildpack-php": "*",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "5.4.*",
         "symfony/css-selector": "5.4.*",
